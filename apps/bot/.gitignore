@@ -1,2 +1,7 @@
 node_modules/
 build/
+
+.wweb*/
+.wwebjs_cache/
+
+.env

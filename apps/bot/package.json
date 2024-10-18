@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
+    "test": "tsx watch src/test.ts",
     "start": "node build/index.js",
     "build": "tsup src --out-dir build"
   },
@@ -20,6 +21,8 @@
     "typescript": "^5.6.3"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^0.0.68",
+    "ai": "^3.4.16",
     "qrcode-terminal": "^0.12.0",
     "whatsapp-web.js": "^1.26.0"
   }
