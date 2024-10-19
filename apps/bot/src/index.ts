@@ -23,9 +23,11 @@ client.on('message_create', async (message) => {
     user: message.from,
   })
 
+  const customer = await message.getContact()
+
   const { text } = await generateText({
     model,
-    system: companyPrompt,
+    system: companyPrompt({ customerName: customer.pushname }),
     prompt: message.body,
   })
 
