@@ -1,7 +1,11 @@
+import { generateText } from 'ai'
+import dotenv from 'dotenv'
 import qrcode from 'qrcode-terminal'
 import { Client, LocalAuth } from 'whatsapp-web.js'
 import { openai } from './lib/openai'
 import { companyPrompt } from './lib/prompts/companyPrompt'
+
+dotenv.config()
 
 const client = new Client({
   authStrategy: new LocalAuth(),
@@ -15,32 +19,17 @@ client.on('ready', () => {
 })
 
 client.on('message_create', async (message) => {
-  console.log(message.body)
-  console.log(message.from)
-  if (message.body === 'ping') {
-    // await client.sendMessage(message.from, 'pong')
-    const model = openai.chat('gpt-3.5-turbo', {
-      user: message.from,
-    })
+  const model = openai.chat('gpt-3.5-turbo', {
+    user: message.from,
+  })
 
-    const messages = [
-      {
-        role: 'system',
-        content: companyPrompt,
-      },
-      {
-        role: 'user',
-        content: message.body,
-      },
-    ]
+  const { text } = await generateText({
+    model,
+    system: companyPrompt,
+    prompt: message.body,
+  })
 
-    // const content =
-    //   (await generateText({
-    //     model,
-    //     messages,
-    //   })) || 'Não entendi...'
-    // Ver como faz para passar o texto só uma vez para o modelo e ele entender
-  }
+  await client.sendMessage(message.from, text)
 })
 
 client.initialize()
